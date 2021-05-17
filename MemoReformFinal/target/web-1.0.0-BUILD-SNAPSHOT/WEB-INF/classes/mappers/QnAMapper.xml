@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="qna">
+
+  <select id="getQnAList" resultType="qna">
+    SELECT q.no as no, q.sj as sj, m.nm as nm, to_char(q.rgsde,'yyyy.mm.dd.') as rgsde, q.co as co
+    FROM qna q, mber m
+    WHERE q.writer_no = m.no(+)
+    ORDER BY no DESC
+  </select>
+
+  <select id="getQnA" resultType="qna">
+    SELECT q.sj as sj, to_char(q.rgsde,'yyyy-mm-dd mm:mi') as rgsde, q.co as co, q.cn as cn, m.nm
+    FROM qna q, mber m
+    WHERE q.no = #{no} AND q.writer_no = m.no(+)
+  </select>
+
+  <insert id="insertQnA">
+    INSERT INTO qna (no, writer_no, sj, cn) VALUES (seq_qna_no.nextval, #{writerNo}, #{sj}, #{cn})
+  </insert>
+
+  <update id="updateQnA">
+    UPDATE qna SET sj = #{sj}, cn = #{cn}, rgsde = sysdate WHERE no = #{no}
+  </update>
+
+  <update id="updateCount">
+    UPDATE qna SET co = co + 1 WHERE no = #{no}
+  </update>
+
+  <delete id="deleteQnA">
+    DELETE FROM qna WHERE no = #{no}
+  </delete>
+</mapper>

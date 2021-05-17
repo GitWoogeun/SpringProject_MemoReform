@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="comment">
+
+  <!--<![CDATA[ 쿼리문에서 비교연산자를 사용할때 mapper에서 거리기 때문에 사용할수 없지만 CDATA에서 사용할수있게 해준다.]]>-->
+  <!--insert태그 id = DAO에서 mybais를 찾을수있게 지명 해주는것-->
+  <!--댓글 DB저장-->
+  <insert id="insertComment" parameterType="qna">
+    <![CDATA[
+      INSERT INTO QNA_REPLY(no, qna_No, writer_No, cn, rgsde)
+      VALUES(SEQ_QNA_REPLY_NO.nextval, #{qnaNo}, #{writerNo}, #{cn}, sysdate)
+    ]]>
+  </insert>
+
+  <!--댓글 전체 불러오기-->
+  <select id="getCommentList" parameterType="qna" resultType="qna">
+      SELECT * FROM QNA_REPLY WHERE QNA_NO = #{qnaNo}
+  </select>
+
+  <!--댓글 삭제 하기-->
+  <delete id="deleteComment" parameterType="qna">
+      DELETE FROM QNA_REPLY WHERE NO = #{no}
+  </delete>
+
+  <!--댓글 수정하기-->
+  <update id="updateComment" parameterType="qna">
+		UPDATE QNA_REPLY SET CN = #{cn}
+		WHERE NO = #{no}
+  </update>
+</mapper>
+<!--진짜 꼭 필수 INSERT INTO QNA_REPLY(여기는 쿼리문하고 진짜 똑같이 써야한다. _ 이것도 써야함★★★★★★★★)-->
+<!--VALUES(여기는 VO변수명하고 똑같이 써야한다.)-->

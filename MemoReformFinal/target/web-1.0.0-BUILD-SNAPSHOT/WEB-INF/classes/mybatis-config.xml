@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+  <!--setting name = mybatis의 행위를 조정하기위한 중요한 값-->
+  <!--name="mapUnderscoreToCamelCase" =>> 낙타표기법을 사용하기 위해-->
+  <settings>
+    <setting name="mapUnderscoreToCamelCase" value="true"/>
+  </settings>
+  <!-- Alias 설정 -->
+  <!--각 VO의 type을 단축을 하기위해 typeAlias태그를 사용하여 alias는 각 VO의 앞 부분을 입력-->
+  <typeAliases>
+    <typeAlias alias="member" type="com.memoreform.vo.MemberVO"/>
+    <typeAlias alias="request" type="com.memoreform.vo.RequestVO"/>
+    <typeAlias alias="proposal" type="com.memoreform.vo.ProposalVO"/>
+    <typeAlias alias="qna" type="com.memoreform.vo.QnAVO"/>
+    <typeAlias alias="notice" type="com.memoreform.vo.NoticeVO"/>
+    <typeAlias alias="count" type="com.memoreform.vo.CountVO"/>
+    <typeAlias alias="dealing" type="com.memoreform.vo.DealingVO"/>
+  </typeAliases>
+</configuration>
+

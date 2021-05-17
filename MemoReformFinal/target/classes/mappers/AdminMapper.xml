@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="admin">
+
+  <!--일반회원 리스트 불러오는 쿼리-->
+  <select id="getUserList" parameterType="member" resultType="member">
+    SELECT * FROM MBER WHERE TY = 'U'
+  </select>
+
+  <!--전문가 회원 리스트를 불러오는 쿼리-->
+  <select id="getExpertList" parameterType="member" resultType="member">
+    SELECT * FROM MBER WHERE TY = 'E'
+  </select>
+
+  <!--의뢰서 리스트 쿼리-->
+  <select id="getRequestList" parameterType="request" resultType="request">
+    SELECT R.NO, R.SJ, M.NM, R.RGSDE, R.CTGRY, R.STTUS
+    FROM RQSTDOC R, MBER M
+    WHERE R.MBER_NO = M.NO
+  </select>
+
+  <!--제안서 리스트 쿼리-->
+  <select id="getProposalList" parameterType="proposal" resultType="proposal">
+    SELECT P.NO, R.NO AS RQSTDOC_NO, P.SJ, M.NM AS EXPERT_NM, P.RGSDE, R.CTGRY, P.ESTMT, P.STTUS
+    FROM PRPSL P, RQSTDOC R, MBER M
+    WHERE P.EXPERT_NO = M.NO AND P.RQSTDOC_NO = R.NO
+  </select>
+
+  <!--유저 회원수 , 전문가 회원수 , 의뢰서 작성한 수 , 제안서를 작성한 수를 보여주는 쿼리-->
+  <select id="getCount" parameterType="count" resultType="count">
+    SELECT (SELECT COUNT(*) FROM MBER WHERE TY = 'U') AS USER_COUNT,
+    (SELECT COUNT(*) FROM MBER WHERE TY = 'E') AS EXPERT_COUNT,
+    (SELECT COUNT(*) FROM RQSTDOC) AS RQSTDOC_COUNT,
+    (SELECT COUNT(*) FROM PRPSL) AS PRPSL_COUNT
+    FROM DUAL
+  </select>
+
+  <!--관리자 요청(의뢰서) 리스트 쿼리-->
+  <select id="getRequestListAdmin" resultType="request">
+    SELECT r.no as no,
+    r.sj as sj,
+    r.cn as cn,
+    m.nm as nm,
+    r.ctgry as ctgry,
+    r.sttus as sttus,
+    to_char(r.rgsde, 'yyyy-mm-dd mm:mi') as rgsde
+    FROM rqstdoc r, mber m
+    where ty = 'U'
+  </select>
+
+  <!--몇년 몇월에 일반유저가 가입한 수를 보여주는 쿼리-->
+  <select id="getUserCount" parameterType="count" resultType="count">
+    SELECT TO_CHAR(RGSDE, 'YY-MM') AS MONTH,
+    COUNT(*) AS USERCOUNT
+    FROM MBER
+    WHERE TY = 'U'
+    GROUP BY TO_CHAR(RGSDE, 'YY-MM')
+    ORDER BY TO_CHAR(RGSDE, 'YY-MM')
+  </select>
+
+  <!--몇년 몇월에 가입한 전문가 회원 수를 보여주는 쿼리-->
+  <select id="getExpertCount" parameterType="count" resultType="count">
+    SELECT TO_CHAR(RGSDE, 'YY-MM') AS MONTH,
+    COUNT(*) AS EXPERTCOUNT
+    FROM MBER
+    WHERE TY = 'E'
+    GROUP BY TO_CHAR(RGSDE, 'YY-MM')
+    ORDER BY TO_CHAR(RGSDE, 'YY-MM')
+  </select>
+
+
+  <!--몇년 몇월에 의뢰서를 몇개 작성되었는지 확인하는 쿼리-->
+  <select id="getRequestCount" parameterType="count" resultType="count">
+    SELECT TO_CHAR(RGSDE, 'YY-MM') AS MONTH,
+    COUNT(*) AS RQSTDOCCOUNT
+    FROM RQSTDOC
+    GROUP BY TO_CHAR(RGSDE, 'YY-MM')
+    ORDER BY TO_CHAR(RGSDE, 'YY-MM')
+  </select>
+
+
+  <!--몇년 몇월에 몇개의 제안서가 작성되었는지 확인하는 쿼리-->
+  <select id="getProposalCount" parameterType="count" resultType="count">
+    SELECT TO_CHAR(RGSDE, 'YY-MM') AS MONTH,
+    COUNT(*) AS PRPSLCOUNT
+    FROM PRPSL
+    GROUP BY TO_CHAR(RGSDE, 'YY-MM')
+    ORDER BY TO_CHAR(RGSDE, 'YY-MM')
+  </select>
+
+
+  <!-- 현재 매년 몇월에 매출이 얼마인지 확인하는 쿼리-->
+  <select id="getDealList" parameterType="dealing" resultType="dealing">
+    SELECT TO_CHAR(RGSDE, 'YY-MM') AS MONTH,
+    SUM(ESTMT) AS ESTMT
+    FROM DELNG_DTLS
+    GROUP BY TO_CHAR(RGSDE, 'YY-MM')
+    ORDER BY TO_CHAR(RGSDE, 'YY-MM')
+  </select>
+</mapper>

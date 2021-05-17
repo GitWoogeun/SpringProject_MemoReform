@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="member">
+
+  <select id="userLogin" parameterType="member" resultType="member">
+		SELECT * FROM mber WHERE email = #{email} AND password = #{password}
+  </select>
+
+  <insert id="userJoin" parameterType="member">
+    INSERT INTO mber (no, nm, email, password) VALUES (seq_mber_no.nextval, #{nm}, #{email}, #{password})
+  </insert>
+
+  <select id="checkEmail" parameterType="member" resultType="member">
+    SELECT * FROM MBER WHERE EMAIL = #{email}
+  </select>
+</mapper>

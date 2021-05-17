@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="qna">
+
+  <!-- QNA 리스트를 내림차순 정렬을 후 보여주는 쿼리 -->
+  <select id="getQnAList" resultType="qna">
+    SELECT q.no as no, q.sj as sj, m.nm as nm, to_char(q.rgsde,'yyyy.mm.dd.') as rgsde, q.co as co
+    FROM qna q, mber m
+    WHERE q.writer_no = m.no(+)
+    ORDER BY no DESC
+  </select>
+
+  <!-- 특정 QNA를 보여주는 쿼리 -->
+  <select id="getQnA" resultType="qna">
+    SELECT q.sj as sj, to_char(q.rgsde,'yyyy-mm-dd mm:mi') as rgsde, q.co as co, q.cn as cn, m.nm
+    FROM qna q, mber m
+    WHERE q.no = #{no} AND q.writer_no = m.no(+)
+  </select>
+
+  <!-- 작성한 QNA를 DB에 저장 해주는 쿼리 -->
+  <insert id="insertQnA">
+    INSERT INTO qna (no, writer_no, sj, cn) VALUES (seq_qna_no.nextval, #{writerNo}, #{sj}, #{cn})
+  </insert>
+
+  <!-- 작성된 QNA를 제목, 내용, 날짜(당시시간으로)을 수정할수 있는 쿼리 -->
+  <update id="updateQnA">
+    UPDATE qna SET sj = #{sj}, cn = #{cn}, rgsde = sysdate WHERE no = #{no}
+  </update>
+
+  <!-- 작성된 QNA를 클릭시 조회수 1증가 시켜주는 업데이트 쿼리 -->
+  <update id="updateCount">
+    UPDATE qna SET co = co + 1 WHERE no = #{no}
+  </update>
+
+  <!-- 작성된 QNA를 삭제 시켜주는 쿼리 -->
+  <delete id="deleteQnA">
+    DELETE FROM qna WHERE no = #{no}
+  </delete>
+</mapper>

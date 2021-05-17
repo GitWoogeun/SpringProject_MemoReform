@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="notice">
+
+  <!-- 공지사항 번호를 내림차순으로 정렬하는 쿼리 -->
+  <select id="getNoticeList" resultType="notice">
+    SELECT * FROM NOTICE ORDER BY no DESC
+  </select>
+
+  <!-- 특정 공지사항을 확인 할수 있는 쿼리 -->
+  <select id="getNotice" resultType="notice">
+    SELECT sj, to_char(rgsde,'yyyy-mm-dd mm:mi') as rgsde, co, cn FROM NOTICE WHERE no = #{no}
+  </select>
+
+  <!-- 공지사항에 작성한 글쓰기 DB에 저장 -->
+  <insert id="insertNotice">
+    INSERT INTO notice (no, sj, cn) VALUES (seq_qna_no.nextval, #{sj}, #{cn})
+  </insert>
+
+  <!-- 특정 공지사항을 수정 할수 있는 쿠리 -->
+  <update id="updateNotice">
+    UPDATE notice SET sj = #{sj}, cn = #{cn}, rgsde = sysdate WHERE no = #{no}
+  </update>
+
+  <!-- 공지사항을 클릭(확인)할 시 조회수를 증가 시켜주는 쿼리 -->
+  <update id="updateCount">
+    UPDATE notice SET co = co + 1 WHERE no = #{no}
+  </update>
+
+  <!-- 특정 공지사항을 삭제 하는 쿼리 -->
+  <delete id="deleteNotice">
+    DELETE FROM notice WHERE no = #{no}
+  </delete>
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="proposal">
+
+  <!-- 제안서의 목록을 보여주는 쿼리 -->
+  <select id="getProposalList" resultType="proposal">
+    SELECT
+    p.no         as no,
+    p.rqstdoc_no as rqstdoc_no,
+    m.nm         as expert_nm,
+    p.sj         as sj,
+    p.cn         as cn,
+    p.estmt      as estmt,
+    p.sttus      as sttus,
+    to_char(p.rgsde,'yyyy-mm-dd mm:mi') as rgsde
+    FROM prpsl p, mber m
+    WHERE p.rqstdoc_no in (SELECT r.no FROM rqstdoc r WHERE r.mber_no = #{mberNo})
+    AND p.expert_no = m.no
+  </select>
+
+  <!-- 특정 제안서를 보여주는 쿼리 -->
+  <select id="getProposal" resultType="proposal">
+    SELECT * FROM prpsl WHERE no = #{no}
+  </select>
+
+  <insert id="insertProposal">
+
+  </insert>
+</mapper>
